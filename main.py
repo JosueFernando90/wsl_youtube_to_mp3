@@ -1,17 +1,19 @@
-from yt_dlp import YoutubeDL
 import os
+from yt_dlp import YoutubeDL
 from urllib.parse import urlparse, parse_qs, urlunparse
+import traceback
+import time
+import random
+import re
+
+def limpar_nome_arquivo(titulo):
+    return re.sub(r'[\\/*?:"<>|]', "", titulo)
 
 def limpar_url_suja(url):
-    """
-    Recebe uma URL do YouTube possivelmente "suja" (com parâmetros extras) e retorna
-    somente a URL básica com ?v=VIDEO_ID.
-    """
     parsed = urlparse(url)
     query = parse_qs(parsed.query)
     video_id = query.get('v')
     if not video_id:
-        # Se não encontrar parâmetro v, retorna url original (ou pode tratar como inválida)
         return url
     video_id = video_id[0]
     clean_query = f"v={video_id}"
@@ -44,26 +46,49 @@ def baixar_youtube_para_mp3(lista_urls, pasta_destino='./meus_mp3s'):
             url_limpa = limpar_url_suja(url)
             print(f"Processando: {url_limpa}")
             try:
+                info_dict = ydl.extract_info(url_limpa, download=False)
+                title = info_dict.get('title', 'video')
+                nome_arquivo = os.path.join(pasta_destino, f"{limpar_nome_arquivo(title)}.mp3")
+
                 ydl.download([url_limpa])
+
+                if not os.path.isfile(nome_arquivo):
+                    raise Exception(f"Arquivo mp3 não encontrado após download: {nome_arquivo}")
+
             except Exception as e:
-                print(f"Erro no download de {url_limpa}: {e}")
-                erros.append(f"{url_limpa} - {e}")
+                erro_completo = traceback.format_exc()
+                print(f"Erro no download/conversão de {url_limpa}: {e}")
+                erros.append(f"URL: {url_limpa}\nErro: {str(e)}\nTraceback:\n{erro_completo}\n")
+
+            # Evitar excesso de solicitações
+            tempo_espera = random.uniform(3, 7)  # entre 3 e 7 segundos
+            print(f"Aguardando {tempo_espera:.1f} segundos antes do próximo download...\n")
+            time.sleep(tempo_espera)
+
 
     if erros:
         with open('log_erros.txt', 'w', encoding='utf-8') as f:
             for linha in erros:
-                f.write(linha + '\n')
+                f.write(linha + '\n' + '-'*80 + '\n')
         print(f"Alguns downloads falharam. Veja 'log_erros.txt' para detalhes.")
     else:
         print("Todos os downloads foram concluídos com sucesso!")
 
 if __name__ == '__main__':
-    urls_sujas = [
-        "https://www.youtube.com/watch?v=azdwsXLmrHE&list=RDazdwsXLmrHE&start_radio=1",
-        "https://www.youtube.com/watch?v=BF-yWPdQUmY&list=RDBF-yWPdQUmY&start_radio=1",
-        "https://www.youtube.com/watch?v=CbFNwokMbG8&list=RDBF-yWPdQUmY&index=3",
-        "https://www.youtube.com/watch?v=lk_EXr9xEr0&list=RDBF-yWPdQUmY&index=6",
-        "https://www.youtube.com/watch?v=YB-qGRuSpsA&list=RDBF-yWPdQUmY&index=12"
-        # ... cole todas as URLs sujas aqui ...
-    ]
-    baixar_youtube_para_mp3(urls_sujas, pasta_destino="./meus_mp3s")
+    try:
+        with open('urls.txt', 'r', encoding='utf-8') as f:
+            urls_lidas = [linha.strip() for linha in f if linha.strip()]
+    except FileNotFoundError:
+        print("Arquivo 'urls.txt' não encontrado. Por favor, crie o arquivo com uma URL por linha.")
+        exit(1)
+
+    # Limpar URLs e remover duplicatas com base na versão limpa
+    urls_limpa_unicas = list({limpar_url_suja(url) for url in urls_lidas})
+
+    with open('urls_processadas.txt', 'w', encoding='utf-8') as f:
+        for url in urls_limpa_unicas:
+            f.write(url + '\n')
+
+    baixar_youtube_para_mp3(urls_limpa_unicas, pasta_destino="./meus_mp3s")
+
+

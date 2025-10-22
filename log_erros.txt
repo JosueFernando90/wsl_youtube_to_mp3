@@ -1,0 +1,10 @@
+URL: https://www.youtube.com/watch?v=1A9jo8zP2Tg
+Erro: Arquivo mp3 não encontrado após download: ./meus_mp3s/O homem mais rico da Babilônia - Audiobook Completo - Narração em PortuguêsBR.mp3
+Traceback:
+Traceback (most recent call last):
+  File "/home/careqaubuntu/projetos/youtube_to_mp3/main.py", line 56, in baixar_youtube_para_mp3
+    raise Exception(f"Arquivo mp3 não encontrado após download: {nome_arquivo}")
+Exception: Arquivo mp3 não encontrado após download: ./meus_mp3s/O homem mais rico da Babilônia - Audiobook Completo - Narração em PortuguêsBR.mp3
+
+
+--------------------------------------------------------------------------------
