@@ -1,1 +1,33 @@
-Log de erros de extração de títulos:
+URL: https://www.youtube.com/watch?v=SETK2maosQY
+Erro: [0;31mERROR:[0m [youtube] SETK2maosQY: The following content is not available on this app.. Watch on the latest version of YouTube.
+Traceback:
+Traceback (most recent call last):
+  File "/home/careqaubuntu/projetos/youtube_to_mp3/venv/lib/python3.10/site-packages/yt_dlp/YoutubeDL.py", line 1664, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/careqaubuntu/projetos/youtube_to_mp3/venv/lib/python3.10/site-packages/yt_dlp/YoutubeDL.py", line 1799, in __extract_info
+    ie_result = ie.extract(url)
+  File "/home/careqaubuntu/projetos/youtube_to_mp3/venv/lib/python3.10/site-packages/yt_dlp/extractor/common.py", line 761, in extract
+    ie_result = self._real_extract(url)
+  File "/home/careqaubuntu/projetos/youtube_to_mp3/venv/lib/python3.10/site-packages/yt_dlp/extractor/youtube/_video.py", line 3930, in _real_extract
+    self.raise_no_formats(reason, expected=True)
+  File "/home/careqaubuntu/projetos/youtube_to_mp3/venv/lib/python3.10/site-packages/yt_dlp/extractor/common.py", line 1273, in raise_no_formats
+    raise ExtractorError(msg, expected=expected, video_id=video_id)
+yt_dlp.utils.ExtractorError: [youtube] SETK2maosQY: The following content is not available on this app.. Watch on the latest version of YouTube.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/careqaubuntu/projetos/youtube_to_mp3/./main.py", line 70, in baixar_youtube_para_mp3
+    info_dict = ydl.extract_info(url_limpa, download=False)
+  File "/home/careqaubuntu/projetos/youtube_to_mp3/venv/lib/python3.10/site-packages/yt_dlp/YoutubeDL.py", line 1653, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+  File "/home/careqaubuntu/projetos/youtube_to_mp3/venv/lib/python3.10/site-packages/yt_dlp/YoutubeDL.py", line 1682, in wrapper
+    self.report_error(str(e), e.format_traceback())
+  File "/home/careqaubuntu/projetos/youtube_to_mp3/venv/lib/python3.10/site-packages/yt_dlp/YoutubeDL.py", line 1122, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+  File "/home/careqaubuntu/projetos/youtube_to_mp3/venv/lib/python3.10/site-packages/yt_dlp/YoutubeDL.py", line 1061, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] SETK2maosQY: The following content is not available on this app.. Watch on the latest version of YouTube.
+
+
+--------------------------------------------------------------------------------
