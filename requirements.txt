@@ -1,2 +1,4 @@
 pydub==0.25.1
+setuptools==80.9.0
+wheel==0.45.1
 yt-dlp==2025.7.21
